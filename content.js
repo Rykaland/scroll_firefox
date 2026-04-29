@@ -64,63 +64,81 @@
   var ITEM = 'display:block;width:100%;text-align:left;background:none;border:none;color:#ddd;padding:8px 14px;cursor:pointer;font:13px system-ui,sans-serif;white-space:nowrap';
   var XBTN = 'background:none;border:none;color:#f77;cursor:pointer;font-size:13px;padding:0;line-height:1';
 
-  var panel = document.createElement('div');
-  panel.id = '__sb';
-  panel.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:2147483647;background:rgba(20,20,20,.9);color:#fff;padding:6px 10px;border-radius:20px;font:13px/1 system-ui,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);backdrop-filter:blur(6px);user-select:none;width:fit-content';
+  function mk(tag, css, id) {
+    var el = document.createElement(tag);
+    if (css) el.style.cssText = css;
+    if (id)  el.id = id;
+    return el;
+  }
+  function ap(parent) {
+    for (var i = 1; i < arguments.length; i++) parent.appendChild(arguments[i]);
+    return parent;
+  }
 
-  panel.innerHTML =
-    '<div id="__sbm" style="display:flex;align-items:center;gap:6px">' +
-      '<span id="__si" style="font-size:15px;cursor:pointer">▶</span>' +
-      '<button id="__sd" style="' + BTN + '">−</button>' +
-      '<span id="__ss" style="min-width:26px;text-align:center">1.0</span>' +
-      '<button id="__su" style="' + BTN + '">+</button>' +
-      '<div style="position:relative;flex-shrink:0">' +
-        '<button id="__sm" style="' + BTN + '" title="Menu">⋮</button>' +
-        '<div id="__sdd" style="display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:rgba(20,20,20,.97);border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.6);min-width:140px">' +
-          '<button id="__sg" style="' + ITEM + '"></button>' +
-          '<button id="__sa" style="' + ITEM + '"></button>' +
-          '<div style="height:1px;background:rgba(255,255,255,.08);margin:0 10px"></div>' +
-          '<button id="__sc" style="' + ITEM + ';color:#f77"></button>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div id="__sbp" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
-        '<div id="__sbt" style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px"></div>' +
-        '<button id="__sp_x" style="' + XBTN + '">✕</button>' +
-      '</div>' +
-      '<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:12px;color:#ccc">' +
-        '<span id="__lp"></span><button id="__kp" style="' + KBTN + '"></button>' +
-        '<span id="__lu"></span><button id="__ku" style="' + KBTN + '"></button>' +
-        '<span id="__ld"></span><button id="__kd" style="' + KBTN + '"></button>' +
-        '<span id="__ll"></span>' +
-        '<div style="display:flex;gap:6px">' +
-          '<button id="__lf" style="' + KBTN + ';min-width:0;flex:1">🇫🇷 FR</button>' +
-          '<button id="__le" style="' + KBTN + ';min-width:0;flex:1">🇬🇧 EN</button>' +
-        '</div>' +
-      '</div>' +
-      '<button id="__kr" style="margin-top:10px;width:100%;background:rgba(255,255,255,.08);border:none;color:#aaa;border-radius:8px;padding:4px 0;cursor:pointer;font-size:11px"></button>' +
-    '</div>' +
-    '<div id="__sbab" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#ccc;line-height:2">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
-        '<div id="__abt" style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px"></div>' +
-        '<button id="__ab_x" style="' + XBTN + '">✕</button>' +
-      '</div>' +
-      '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 12px">' +
-        '<span id="__ab_al" style="color:#888"></span><span>Rykaland</span>' +
-        '<span id="__ab_dl" style="color:#888"></span>' +
-        '<a id="__ab_da" href="https://buymeacoffee.com/rykaland" target="_blank" rel="noopener noreferrer" style="color:#7c6af7;text-decoration:none">buymeacoffee</a>' +
-      '</div>' +
-    '</div>';
+  var panel = mk('div', 'position:fixed;bottom:24px;right:24px;z-index:2147483647;background:rgba(20,20,20,.9);color:#fff;padding:6px 10px;border-radius:20px;font:13px/1 system-ui,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.5);backdrop-filter:blur(6px);user-select:none;width:fit-content', '__sb');
 
+  // Ligne principale
+  var si = mk('span', 'font-size:15px;cursor:pointer', '__si');  si.textContent = '▶';
+  var sd = mk('button', BTN, '__sd');                            sd.textContent = '−';
+  var ss = mk('span', 'min-width:26px;text-align:center', '__ss');
+  var su = mk('button', BTN, '__su');                            su.textContent = '+';
+
+  var sg  = mk('button', ITEM, '__sg');
+  var sa  = mk('button', ITEM, '__sa');
+  var sc  = mk('button', ITEM + ';color:#f77', '__sc');
+  var sdd = mk('div', 'display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:rgba(20,20,20,.97);border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.6);min-width:140px', '__sdd');
+  ap(sdd, sg, sa, mk('div', 'height:1px;background:rgba(255,255,255,.08);margin:0 10px'), sc);
+
+  var sm = mk('button', BTN, '__sm');  sm.title = 'Menu';  sm.textContent = '⋮';
+  var sbmRow = mk('div', 'display:flex;align-items:center;gap:6px');
+  var smWrap = mk('div', 'position:relative;flex-shrink:0');
+  ap(smWrap, sm, sdd);
+  ap(sbmRow, si, sd, ss, su, smWrap);
+
+  // Panneau paramètres
+  var sbt  = mk('div', 'font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px', '__sbt');
+  var sp_x = mk('button', XBTN, '__sp_x');  sp_x.textContent = '✕';
+  var lp   = mk('span', null, '__lp');
+  var kp   = mk('button', KBTN, '__kp');
+  var lu   = mk('span', null, '__lu');
+  var ku   = mk('button', KBTN, '__ku');
+  var ld   = mk('span', null, '__ld');
+  var kd   = mk('button', KBTN, '__kd');
+  var ll   = mk('span', null, '__ll');
+  var lf   = mk('button', KBTN + ';min-width:0;flex:1', '__lf');  lf.textContent = '🇫🇷 FR';
+  var le   = mk('button', KBTN + ';min-width:0;flex:1', '__le');  le.textContent = '🇬🇧 EN';
+  var kr   = mk('button', 'margin-top:10px;width:100%;background:rgba(255,255,255,.08);border:none;color:#aaa;border-radius:8px;padding:4px 0;cursor:pointer;font-size:11px', '__kr');
+  var grid = mk('div', 'display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:12px;color:#ccc');
+  ap(grid, lp, kp, lu, ku, ld, kd, ll, ap(mk('div', 'display:flex;gap:6px'), lf, le));
+  var sbp = mk('div', 'display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)', '__sbp');
+  ap(sbp, ap(mk('div', 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'), sbt, sp_x), grid, kr);
+
+  // Panneau à propos
+  var abt   = mk('div', 'font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px', '__abt');
+  var ab_x  = mk('button', XBTN, '__ab_x');   ab_x.textContent = '✕';
+  var ab_al = mk('span', 'color:#888', '__ab_al');
+  var ab_dl = mk('span', 'color:#888', '__ab_dl');
+  var ryka  = mk('span');  ryka.textContent = 'Rykaland';
+  var ab_da = mk('a', 'color:#7c6af7;text-decoration:none', '__ab_da');
+  ab_da.href = 'https://buymeacoffee.com/rykaland';
+  ab_da.target = '_blank';
+  ab_da.rel = 'noopener noreferrer';
+  ab_da.textContent = 'buymeacoffee';
+  var abGrid = mk('div', 'display:grid;grid-template-columns:auto 1fr;gap:2px 12px');
+  ap(abGrid, ab_al, ryka, ab_dl, ab_da);
+  var sbab = mk('div', 'display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#ccc;line-height:2', '__sbab');
+  ap(sbab, ap(mk('div', 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'), abt, ab_x), abGrid);
+
+  ap(panel, sbmRow, sbp, sbab);
   document.body.appendChild(panel);
 
-  var $ = {};
-  ['__si','__sd','__ss','__su','__sm','__sdd','__sg','__sa','__sc',
-   '__sbp','__sbt','__sp_x','__lp','__lu','__ld','__ll','__kp','__ku','__kd',
-   '__lf','__le','__kr','__sbab','__abt','__ab_x','__ab_al','__ab_dl'].forEach(function (id) {
-    $[id] = document.getElementById(id);
-  });
+  var $ = {
+    __si: si,   __sd: sd,   __ss: ss,   __su: su,   __sm: sm,   __sdd: sdd,
+    __sg: sg,   __sa: sa,   __sc: sc,   __sbp: sbp, __sbt: sbt, __sp_x: sp_x,
+    __lp: lp,   __lu: lu,   __ld: ld,   __ll: ll,   __kp: kp,   __ku: ku,
+    __kd: kd,   __lf: lf,   __le: le,   __kr: kr,   __sbab: sbab,
+    __abt: abt, __ab_x: ab_x, __ab_al: ab_al, __ab_dl: ab_dl,
+  };
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;

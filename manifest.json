@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "WebtoonScroller",
+  "name": "Page Scroller",
   "version": "1.0",
-  "description": "Scroll automatique pour lire les webtoons — pause/reprise au clic",
+  "description": "Auto-scroll extension for reading webtoons and long web pages hands-free. Floating control bar with adjustable speed (±0.1), play/pause by clicking anywhere on the page or via keyboard shortcuts, draggable panel with saved position, customizable key bindings, and FR/EN interface.",
   "homepage_url": "https://github.com/Rykaland/scroll_firefox",
 
   "permissions": ["activeTab", "storage"],
 
   "browser_action": {
-    "default_title": "WebtoonScroller",
+    "default_title": "Page Scroller",
     "default_icon": {
       "48": "icons/icon48.png",
       "96": "icons/icon96.png"
@@ -17,5 +17,16 @@
 
   "background": {
     "scripts": ["background.js"]
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "webtoonmanhawscroller@rykaland",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
+    }
   }
 }
