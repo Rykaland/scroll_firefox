@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "WebtoonScroller",
+  "version": "1.0",
+  "description": "Scroll automatique pour lire les webtoons — pause/reprise au clic",
+  "homepage_url": "https://github.com/Rykaland/scroll_firefox",
+
+  "permissions": ["activeTab", "storage"],
+
+  "browser_action": {
+    "default_title": "WebtoonScroller",
+    "default_icon": {
+      "48": "icons/icon48.png",
+      "96": "icons/icon96.png"
+    }
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
